@@ -1,18 +1,14 @@
 package io.javamicroservice.ratingsdataservice.services;
 
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import io.javamicroservice.ratingsdataservice.model.Rating;
-import io.javamicroservice.ratingsdataservice.resources.RatingsResource;
+
 @Service("RatingService")
 public class RatingServiceImpl implements RatingService {
 
@@ -50,7 +46,7 @@ public class RatingServiceImpl implements RatingService {
 	public List<Rating> findByRatingId(int ratingId) {
 		List<Rating> RatingList = new ArrayList<Rating>();
 		for (Rating rating : ratings) {
-			if (rating.getRating()==ratingId) {
+			if (rating.getRating() == ratingId) {
 				RatingList.add(rating);
 			}
 		}
@@ -66,6 +62,17 @@ public class RatingServiceImpl implements RatingService {
 			}
 		}
 		return RatingList;
+	}
+
+	@Override
+	public List<Rating> findByMovieId(String name) {
+		List<Rating> RatingLists = new ArrayList<Rating>();
+		for (Rating Rating : ratings) {
+			if (Rating.getMovieId().equalsIgnoreCase(name)) {
+				RatingLists.add(Rating);
+			}
+		}
+		return RatingLists;
 	}
 
 	@Override
@@ -117,5 +124,4 @@ public class RatingServiceImpl implements RatingService {
 		Ratings.add(new Rating(counter.incrementAndGet(), "700", 1, "Jain"));
 		return Ratings;
 	}
-
 }

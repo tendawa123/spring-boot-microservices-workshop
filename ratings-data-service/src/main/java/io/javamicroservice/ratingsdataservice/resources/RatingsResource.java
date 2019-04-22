@@ -1,7 +1,6 @@
 package io.javamicroservice.ratingsdataservice.resources;
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class RatingsResource {
 	RatingService ratingService;
 	
 	@RequestMapping(value = "/ratings", method = RequestMethod.GET)
-
+	
 	public ResponseEntity<List<Rating>> listAllRatings() {
 		List<Rating> Ratings = ratingService.findAllRatings();
 		if (Ratings.isEmpty()) {
@@ -36,7 +35,6 @@ public class RatingsResource {
 		}
 		return new ResponseEntity<List<Rating>>(Ratings, HttpStatus.OK);
 	}
-
 	/**
 	 * 
 	 * @param name
@@ -53,7 +51,23 @@ public class RatingsResource {
 		}
 		return new ResponseEntity<List<Rating>>(RatingList, HttpStatus.OK);
 	}
-
+	/**
+	 * 
+	 * @param name
+	 * @return gets Rating by movieId.
+	 */
+	@RequestMapping(value = "/ratingMovieId/{movieId}", method = RequestMethod.GET)
+	public ResponseEntity<List<Rating>> listAllRatingMovieIds(@PathVariable("movieId") String name) {
+		logger.info("Fetching Rating with movieId {}", name);
+		List<Rating> RatingList = ratingService.findByMovieId(name);
+		logger.info("one movie id........."+RatingList.toString());
+		if (RatingList.isEmpty()) {
+			logger.error("Rating with movieId {} not found.", name);
+			return new ResponseEntity(new CustomError("Rating with movieId " + name + " not found"),
+					HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<Rating>>(RatingList, HttpStatus.OK);
+	}
 	/**
 	 * 
 	 * @param id
@@ -96,12 +110,12 @@ public class RatingsResource {
 	@RequestMapping(value = "/rating/", method = RequestMethod.POST)
 	public ResponseEntity<?> createRating(@RequestBody Rating Rating, UriComponentsBuilder ucBuilder) {
 		logger.info("Creating Rating : {}", Rating);
-		if (ratingService.isRatingExist(Rating)) {
+		/*if (ratingService.isRatingExist(Rating)) {
 			logger.error("Unable to create. A Rating with name {} already exist", Rating.getUserName());
 			return new ResponseEntity(
 					new CustomError("Unable to create. A Rating with name " + Rating.getUserName() + " already exist."),
 					HttpStatus.CONFLICT);
-		}
+		}*/
 		ratingService.saveRating(Rating);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/Rating/{id}").buildAndExpand(Rating.getId()).toUri());
@@ -129,7 +143,6 @@ public class RatingsResource {
 		ratingService.updateRating(currentRating);
 		return new ResponseEntity<Rating>(currentRating, HttpStatus.OK);
 	}
-
 	/**
 	 * 
 	 * @param id

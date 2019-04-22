@@ -13,6 +13,8 @@ public interface RatingService {
 	List<Rating> findByRatingId(int id);
 
 	List<Rating> findByUserName(String name);
+	
+	List<Rating> findByMovieId(String name);
 
 	void saveRating(Rating Rating);
 
